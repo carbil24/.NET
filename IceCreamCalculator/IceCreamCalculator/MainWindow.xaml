@@ -46,7 +46,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Total Cost:" Grid.Column="1" FontWeight="Bold"/>
                 <TextBox x:Name="txtTotalCoast" IsEnabled="False" Grid.Column="2" Width="150"/>
