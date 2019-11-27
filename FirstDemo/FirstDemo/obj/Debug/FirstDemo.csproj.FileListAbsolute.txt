@@ -1,0 +1,7 @@
+C:\Users\ipd\source\repos\FirstDemo\FirstDemo\bin\Debug\FirstDemo.exe.config
+C:\Users\ipd\source\repos\FirstDemo\FirstDemo\bin\Debug\FirstDemo.exe
+C:\Users\ipd\source\repos\FirstDemo\FirstDemo\bin\Debug\FirstDemo.pdb
+C:\Users\ipd\source\repos\FirstDemo\FirstDemo\obj\Debug\FirstDemo.csprojAssemblyReference.cache
+C:\Users\ipd\source\repos\FirstDemo\FirstDemo\obj\Debug\FirstDemo.csproj.CoreCompileInputs.cache
+C:\Users\ipd\source\repos\FirstDemo\FirstDemo\obj\Debug\FirstDemo.exe
+C:\Users\ipd\source\repos\FirstDemo\FirstDemo\obj\Debug\FirstDemo.pdb
