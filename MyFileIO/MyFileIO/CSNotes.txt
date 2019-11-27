@@ -1,0 +1,6 @@
+Carlos Andres
+I like C#
+Always uses try cath block
+3 notes added on 11/19/2019 5:12:29 PM.
+StreamWriter with append set to true, should not delete old notes.
+1 notes added on 11/19/2019 5:13:37 PM.

@@ -1,0 +1,58 @@
+﻿<Window x:Class="IceCreamCalculator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IceCreamCalculator"
+        mc:Ignorable="d"
+        Title="Ice Cream" Height="280" Width="Auto">
+    <StackPanel>
+        <TextBlock Text="Ice Cream Calculator" FontSize="25" FontWeight="Bold" Grid.ColumnSpan="4" Margin="0,20,0,0" HorizontalAlignment="Center"/>
+        <Grid Grid.Row="0" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Sizes" Grid.Column="0" FontWeight="Bold">
+                <StackPanel>
+                    <RadioButton x:Name="rbtnSmall" Content="Small ($1.00)"  GroupName="rbtnStatus" Margin="0,3,0,0" FontWeight="Light"/>
+                    <RadioButton x:Name="rbtnMedium" Content="Medium ($2.00)"  GroupName="rbtnStatus" FontWeight="Light"/>
+                    <RadioButton x:Name="rbtnLarge" Content="Large ($3.00)"  GroupName="rbtnStatus" FontWeight="Light"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Flavours" Grid.Column="1">
+                <StackPanel>
+                    <RadioButton x:Name="rbtnChoc"  Content="Chocolate ($0.50)"  GroupName="rbtnSize" Margin="0,3,0,0"/>
+                    <RadioButton x:Name="rbtnRocky" Content="Rocky Road ($1.50)"  GroupName="rbtnStatus"/>
+                    <RadioButton x:Name="rbtnMint" Content="Mint Chip ($2.50)"  GroupName="rbtnStatus"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Toppings" Grid.Column="2">
+                <StackPanel>
+                    <CheckBox x:Name="chkbSmarties" Content="Smarties ($0.50)" Margin="0,3,0,0"/>
+                    <CheckBox x:Name="chkbOreo" Content="Oreo ($1.50)" Margin="0,3,0,0"/>
+                    <CheckBox x:Name="chkbSprinkles" Content="Sprinkles ($2.50)" Margin="0,3,0,0"/>
+                    <CheckBox x:Name="chkbCaramel" Content="Caramel ($2.00)" Margin="0,3,0,0"/>
+                </StackPanel>
+            </GroupBox>
+            <Grid Grid.Row="1" Margin="0,5,0,0" Grid.ColumnSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Total Cost:" Grid.Column="1" FontWeight="Bold"/>
+                <TextBox x:Name="txtTotalCoast" IsEnabled="False" Grid.Column="2" Width="150"/>
+            </Grid>
+        </Grid>
+        
+
+    </StackPanel>
+</Window>
