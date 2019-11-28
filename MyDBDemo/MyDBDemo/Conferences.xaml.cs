@@ -29,6 +29,7 @@ namespace MyDBDemo
         {
             InitializeComponent();
             this.SizeToContent = SizeToContent.Height;
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             PopulateConferences();
 
         }
@@ -57,6 +58,47 @@ namespace MyDBDemo
 
                 throw;
             }
+        }
+
+        private void BtnAddConference_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtConferenceName.Text)
+            {
+
+            }
+            else
+            {
+
+                try
+                {
+                    using (SqlConnection con = new SqlConnection(dbConnection))
+                    {
+                        string command = @"select Name from Conferences";
+
+                        SqlCommand cmd = new SqlCommand(command, con);
+                        SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                        sda.Fill(ds, "Conferences");
+                        cmbLoadVisitorForm.ItemsSource = ds.Tables["Conferences"].Rows;
+                        cmbLoadVisitorForm.SelectedValuePath = ".[Name]";
+                        cmbLoadVisitorForm.DisplayMemberPath = ".[Name]";
+
+                        cmbLoadVisitorForm.Items.Refresh();
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+            }
+        }
+
+        private void CmbLoadVisitorForm_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Load all visitors form (MainWindow)
+            MainWindow allVisitorsForm = new MainWindow(1);
+            //Show dialog
+            allVisitorsForm.ShowDialog();
         }
     }
 }

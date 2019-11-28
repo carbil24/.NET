@@ -25,12 +25,46 @@ namespace MyDBDemo
     {
         //string to tell us where is the database
         private string dbConnection = ConfigurationManager.ConnectionStrings["MyDBDemo.Properties.Settings.ConfDBConnectionString"].ConnectionString;
+        private int conferenceID;
+        private DataSet ds = new DataSet();
 
-        public MainWindow()
+
+        public MainWindow(int _conferenceID)
         {
             InitializeComponent();
             this.SizeToContent = SizeToContent.Height;
+            conferenceID = _conferenceID;
             PopulateCountries();
+            LoadAllData();
+        }
+
+        private void LoadAllData()
+        {
+            string command = @"SELECT * from Visitors where conferenceId = " + conferenceID;
+            //DataSet ds = new DataSet(); moved to class level
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(dbConnection))
+                {
+                    SqlCommand cmd = new SqlCommand(command, con);
+                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                    sda.Fill(ds, "Visitors");
+
+                    gridDbData.ItemsSource = ds.Tables["Visitors"].DefaultView;
+                    gridDbData.Items.Refresh();
+
+                    if (ds.Tables["Visitors"].Rows.Count == 0)
+                    {
+                        MessageBox.Show("No data available.", "Alert", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Error accessing DB. \nContact admin." + ex.Message, "DB Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void BtnLoadAllData_Click(object sender, RoutedEventArgs e)
