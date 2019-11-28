@@ -19,9 +19,21 @@
             <Button x:Name="btnLoadAllData" Content="Load All Data" Margin="5" Click="BtnLoadAllData_Click" />
             <GroupBox Header="Search" Margin="5,20,5,0">
                 <StackPanel>
-                    <TextBlock Text="Search by Name"/>
+                    <TextBlock Text="Search by Name" Margin="0,5,0,0"/>
                     <TextBox x:Name="txtName"/>
                     <Button x:Name="btnSearchByName" Content="Search" Click="BtnSearchByName_Click"/>
+                    <TextBlock Text="Search by Country" Margin="0,10,0,0"/>
+                    <ComboBox x:Name="cmbCountries" SelectionChanged="CmbCountries_SelectionChanged" />
+                    <CheckBox x:Name="chckIsSpeaker" Content="Show list of speakers only" Margin="0,10,0,0" Click="ChckIsSpeaker_Click"/>
+                    <GroupBox Margin="0,10,0,0" Header="Date Search">
+                        <StackPanel>
+                            <TextBlock Text="Start Date" Margin="0,10,0,0"/>
+                            <DatePicker x:Name="dpStartDate"/>
+                            <TextBlock Text="End Date" Margin="0,10,0,0"/>
+                            <DatePicker x:Name="dpEndDate"/>
+                            <Button x:Name="BtnDateSearch" Content="Search by Date" Margin="0,10,0,0" Click="BtnDateSearch_Click"/>
+                        </StackPanel>
+                    </GroupBox>
                 </StackPanel>
             </GroupBox>
         </StackPanel>

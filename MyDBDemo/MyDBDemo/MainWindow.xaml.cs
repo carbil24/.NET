@@ -29,6 +29,8 @@ namespace MyDBDemo
         public MainWindow()
         {
             InitializeComponent();
+            this.SizeToContent = SizeToContent.Height;
+            PopulateCountries();
         }
 
         private void BtnLoadAllData_Click(object sender, RoutedEventArgs e)
@@ -68,6 +70,58 @@ namespace MyDBDemo
         private void BtnSearchByName_Click(object sender, RoutedEventArgs e)
         {
             QueryVisitorTable(@"select * from Visitors where FullName like '%" + txtName.Text + @"%'");
+        }
+
+        private void PopulateCountries()
+        {
+            try
+            {
+                string command = @"select Name from countries";
+                DataSet ds = new DataSet();
+
+                using (SqlConnection con = new SqlConnection(dbConnection))
+                {
+                    SqlCommand cmd = new SqlCommand(command, con);
+                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                    sda.Fill(ds, "Countries");
+                    cmbCountries.ItemsSource = ds.Tables["Countries"].Rows;
+                    cmbCountries.SelectedValuePath = ".[Name]";
+                    cmbCountries.DisplayMemberPath = ".[Name]";
+
+                    cmbCountries.Items.Refresh();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        private void CmbCountries_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            QueryVisitorTable(@"select * from Visitors where Country = '" + cmbCountries.SelectedValue.ToString() + @"'");
+
+        }
+
+        private void ChckIsSpeaker_Click(object sender, RoutedEventArgs e)
+        {          
+            QueryVisitorTable(@"select * from Visitors where speaker = '" + chckIsSpeaker.IsChecked.Value + @"'");          
+        }
+
+        private void BtnDateSearch_Click(object sender, RoutedEventArgs e)
+        {
+            if (dpStartDate.SelectedDate.HasValue && dpEndDate.SelectedDate.HasValue)
+            {
+                QueryVisitorTable(@"select * from visitors where CheckinDate BETWEEN '" +
+                    dpStartDate.SelectedDate.Value + @"' AND '" +
+                    dpEndDate.SelectedDate.Value + @"'");
+            }
+            else
+            {
+                MessageBox.Show("Error: please enter a date first", "Date Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
