@@ -16,7 +16,13 @@
         <DataGrid x:Name="gridDbData" Grid.Column="1"/>
         <!--Right Handside of my window-->
         <StackPanel>
-            <Button x:Name="btnLoadAllData" Content="Load All Data" Margin="5" Click="BtnLoadAllData_Click" />
+            <TextBlock x:Name="txttbconferenceTitle" Text="Conference" Margin="10" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <Button x:Name="btnAddVisitor" Content="Add New Visitor" Margin="5" Click="BtnAddVisitor_Click" />
+            <Button x:Name="btnEditVisitorInfo" Content="Edit Visitor Info" Margin="5,0,5,0" Click="BtnEditVisitorInfo_Click"/>
+            <Button x:Name="btnDelete" Content="Delete Visitor Record" Margin="5,0,5,0" Click="BtnDelete_Click"/>
+            <Button x:Name="btnLoadAllData" Content="Clear Filters" Margin="5,20,5,5" Click="BtnLoadAllData_Click" />
+
+            
             <GroupBox Header="Search" Margin="5,20,5,0">
                 <StackPanel>
                     <TextBlock Text="Search by Name" Margin="0,5,0,0"/>

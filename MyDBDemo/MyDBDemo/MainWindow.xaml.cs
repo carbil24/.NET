@@ -29,13 +29,15 @@ namespace MyDBDemo
         private DataSet ds = new DataSet();
 
 
-        public MainWindow(int _conferenceID)
+        public MainWindow(int _conferenceID, string _title)
         {
             InitializeComponent();
             this.SizeToContent = SizeToContent.Height;
             conferenceID = _conferenceID;
             PopulateCountries();
             LoadAllData();
+            this.Title = _title + "Conference - Visitor Information";
+            txttbconferenceTitle.Text = _title + "Conference";
         }
 
         private void LoadAllData()
@@ -69,9 +71,90 @@ namespace MyDBDemo
 
         private void BtnLoadAllData_Click(object sender, RoutedEventArgs e)
         {
-            QueryVisitorTable(@"select * from Visitors");
+            //QueryVisitorTable(@"SELECT * from Visitors");
+            FilterVisitorTable("");
+        }      
+
+        private void BtnSearchByName_Click(object sender, RoutedEventArgs e)
+        {
+            //QueryVisitorTable(@"select * from Visitors where FullName like '%" + txtName.Text + @"%'");
+            FilterVisitorTable(@"FullName LIKE'%" + txtName.Text + @"%'");
+            txtName.Text = "";
         }
 
+        private void FilterVisitorTable(string filter)
+        {
+            try
+            {
+                //ds.Tables["Visitors"].DefaultView.RowFilter = "";
+                ds.Tables["Visitors"].DefaultView.RowFilter = filter;
+                gridDbData.Items.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void CmbCountries_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            //QueryVisitorTable(@"select * from Visitors where Country = '" + cmbCountries.SelectedValue.ToString() + @"'");
+            FilterVisitorTable(@"Country = '" + cmbCountries.SelectedValue.ToString() + @"'");
+
+        }
+
+        private void PopulateCountries()
+        {
+            try
+            {
+                string command = @"select Name from countries";
+                //DataSet ds = new DataSet(); moved to class level
+
+                using (SqlConnection con = new SqlConnection(dbConnection))
+                {
+                    SqlCommand cmd = new SqlCommand(command, con);
+                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                    sda.Fill(ds, "Countries");
+                    cmbCountries.ItemsSource = ds.Tables["Countries"].Rows;
+                    cmbCountries.SelectedValuePath = ".[Name]";
+                    cmbCountries.DisplayMemberPath = ".[Name]";
+
+                    cmbCountries.Items.Refresh();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private void ChckIsSpeaker_Click(object sender, RoutedEventArgs e)
+        {
+            //QueryVisitorTable(@"select * from Visitors where speaker = '" + chckIsSpeaker.IsChecked.Value + @"'"); 
+            FilterVisitorTable(@"speaker = '" + chckIsSpeaker.IsChecked.Value + @"'");
+        }
+
+        private void BtnDateSearch_Click(object sender, RoutedEventArgs e)
+        {
+            if (dpStartDate.SelectedDate.HasValue && dpEndDate.SelectedDate.HasValue)
+            {
+                FilterVisitorTable(
+                    "CheinDate >= #" + dpStartDate.SelectedDate.Value + "# AND " +
+                    "CheinDate <= #" + dpEndDate.SelectedDate.Value + "#");
+
+               //QueryVisitorTable(@"select * from visitors where CheckinDate BETWEEN '" +
+                    //dpStartDate.SelectedDate.Value + @"' AND '" +
+                    //dpEndDate.SelectedDate.Value + @"'");
+            }
+            else
+            {
+                MessageBox.Show("Error: please enter a date first", "Date Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        //REMOVED
         private void QueryVisitorTable(string command)
         {
             //Command: SQL
@@ -101,61 +184,134 @@ namespace MyDBDemo
             }
         }
 
-        private void BtnSearchByName_Click(object sender, RoutedEventArgs e)
+        private void BtnAddVisitor_Click(object sender, RoutedEventArgs e)
         {
-            QueryVisitorTable(@"select * from Visitors where FullName like '%" + txtName.Text + @"%'");
-        }
-
-        private void PopulateCountries()
-        {
-            try
+            VisitorsWindow newVisitorWindow = new VisitorsWindow(ds.Tables["Countries"].Rows);
+            if (newVisitorWindow.ShowDialog().Value)
             {
-                string command = @"select Name from countries";
-                DataSet ds = new DataSet();
-
-                using (SqlConnection con = new SqlConnection(dbConnection))
+                //Add to the database
+                Visitor v = newVisitorWindow.VisitorInfo;
+                try
                 {
-                    SqlCommand cmd = new SqlCommand(command, con);
-                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                    sda.Fill(ds, "Countries");
-                    cmbCountries.ItemsSource = ds.Tables["Countries"].Rows;
-                    cmbCountries.SelectedValuePath = ".[Name]";
-                    cmbCountries.DisplayMemberPath = ".[Name]";
+                    using (SqlConnection con = new SqlConnection(dbConnection))
+                    {
+                        string command =
+                            "INSERT into Visitors" +
+                            "(FullName, Major, Country, Status, Speaker, CheckinDate, ConferenceID) VALUES (" +
+                            @"'" + v.FullName + @"', " +
+                            @"'" + v.Major + @"', " +
+                            @"'" + v.Country + @"', " +
+                            @"'" + v.VisitorStatus.ToString() + @"', " +
+                            @"'" + v.IsSpeaker + @"', " +
+                            @"'" + v.CheckInDate + @"', " +
+                            conferenceID + ")";
+                        SqlCommand cmd = new SqlCommand(command, con);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
 
-                    cmbCountries.Items.Refresh();
+                        //Updating my grid.
+                        ds.Tables["Visitors"].Clear();
+                        LoadAllData();
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
                 }
             }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
         }
 
-        private void CmbCountries_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void BtnEditVisitorInfo_Click(object sender, RoutedEventArgs e)
         {
-
-            QueryVisitorTable(@"select * from Visitors where Country = '" + cmbCountries.SelectedValue.ToString() + @"'");
-
-        }
-
-        private void ChckIsSpeaker_Click(object sender, RoutedEventArgs e)
-        {          
-            QueryVisitorTable(@"select * from Visitors where speaker = '" + chckIsSpeaker.IsChecked.Value + @"'");          
-        }
-
-        private void BtnDateSearch_Click(object sender, RoutedEventArgs e)
-        {
-            if (dpStartDate.SelectedDate.HasValue && dpEndDate.SelectedDate.HasValue)
+            if (gridDbData.SelectedIndex > 0 && gridDbData.SelectedIndex != gridDbData.Items.Count)
             {
-                QueryVisitorTable(@"select * from visitors where CheckinDate BETWEEN '" +
-                    dpStartDate.SelectedDate.Value + @"' AND '" +
-                    dpEndDate.SelectedDate.Value + @"'");
+                DataRowView r = gridDbData.SelectedItem as DataRowView;
+                Visitor existing = new Visitor()
+                {
+                    FullName = r["FullName"].ToString(),
+                    Major = r["Major"].ToString(),
+                    Country = r["Country"].ToString(),
+                    VisitorStatus = r["Status"].ToString() == Status.Teacher.ToString() ? Status.Teacher :
+                                    r["Status"].ToString() == Status.Student.ToString() ? Status.Student : Status.Proffessional,
+                    IsSpeaker = bool.Parse(r["Speaker"].ToString()),
+                    CheckInDate = DateTime.Parse(r["CheckinDate"].ToString())
+                };
+                //MessageBox.Show(gridDbData.SelectedItem.ToString());
+                VisitorsWindow modifyVisitor = new VisitorsWindow(ds.Tables["Countries"].Rows, existing);
+
+                if (modifyVisitor.ShowDialog().Value)
+                {
+                    try
+                    {
+                        Visitor v = modifyVisitor.VisitorInfo;
+                        using (SqlConnection con = new SqlConnection(dbConnection))
+                        {
+                            string command =
+                                "UPDATE Visitors SET " +
+                                @"FullName ='" + v.FullName + @"', " +
+                                @"Major ='" + v.Major + @"', " +
+                                @"Country ='" + v.Country + @"', " +
+                                @"Status ='" + v.VisitorStatus.ToString() + @"', " +
+                                @"Speaker ='" + v.IsSpeaker + @"', " +
+                                @"CheckinDate ='" + v.CheckInDate + @"' WHERE Id =" + r["Id"];
+
+                            SqlCommand cmd = new SqlCommand(command, con);
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+
+                            //Updating my grid.
+                            ds.Tables["Visitors"].Clear();
+                            LoadAllData();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error: " + ex.Message);
+                    }
+                }              
             }
             else
             {
-                MessageBox.Show("Error: please enter a date first", "Date Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Please select a record first");
             }
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (gridDbData.SelectedIndex > 0 && gridDbData.SelectedIndex != gridDbData.Items.Count)
+            {
+                DataRowView r = gridDbData.SelectedItem as DataRowView;
+
+                try
+                {
+                    using (SqlConnection con = new SqlConnection(dbConnection))
+                    {
+                        string command =
+                            "Delete from Visitors where Id=" + r["Id"];                            
+                        SqlCommand cmd = new SqlCommand(command, con);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+
+                        //Updating my grid.
+                        ds.Tables["Visitors"].Clear();
+                        LoadAllData();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a record first", "No selection", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+
         }
     }
 }

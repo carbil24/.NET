@@ -38,7 +38,7 @@ namespace MyDBDemo
         {
             try
             {
-                string command = @"select Name from Conferences";
+                string command = @"select * from Conferences";
                 DataSet ds = new DataSet();
 
                 using (SqlConnection con = new SqlConnection(dbConnection))
@@ -47,13 +47,13 @@ namespace MyDBDemo
                     SqlDataAdapter sda = new SqlDataAdapter(cmd);
                     sda.Fill(ds, "Conferences");
                     cmbLoadVisitorForm.ItemsSource = ds.Tables["Conferences"].Rows;
-                    cmbLoadVisitorForm.SelectedValuePath = ".[Name]";
+                    cmbLoadVisitorForm.SelectedValuePath = ".[Id]";
                     cmbLoadVisitorForm.DisplayMemberPath = ".[Name]";
 
                     cmbLoadVisitorForm.Items.Refresh();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 throw;
@@ -62,41 +62,37 @@ namespace MyDBDemo
 
         private void BtnAddConference_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtConferenceName.Text)
-            {
-
-            }
+            if (string.IsNullOrEmpty(txtConferenceName.Text))
+                MessageBox.Show("Please enter a conference name first");
             else
             {
-
                 try
                 {
                     using (SqlConnection con = new SqlConnection(dbConnection))
                     {
-                        string command = @"select Name from Conferences";
-
+                        string command = @"INSERT INTO Conferences (Name) VALUES (" +
+                            @"'" + txtConferenceName.Text + @"')";
                         SqlCommand cmd = new SqlCommand(command, con);
-                        SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                        sda.Fill(ds, "Conferences");
-                        cmbLoadVisitorForm.ItemsSource = ds.Tables["Conferences"].Rows;
-                        cmbLoadVisitorForm.SelectedValuePath = ".[Name]";
-                        cmbLoadVisitorForm.DisplayMemberPath = ".[Name]";
-
-                        cmbLoadVisitorForm.Items.Refresh();
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
                     }
                 }
                 catch (Exception ex)
                 {
-
-                    throw;
+                    MessageBox.Show("Error: " + ex.Message);
                 }
+                ////Repopulate my conferences list
+                PopulateConferences();
+                txtConferenceName.Text = "";
             }
         }
 
         private void CmbLoadVisitorForm_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //Load all visitors form (MainWindow)
-            MainWindow allVisitorsForm = new MainWindow(1);
+            string conferenceName = (cmbLoadVisitorForm.SelectedItem as DataRow)["Name"].ToString();
+            MainWindow allVisitorsForm = new MainWindow(int.Parse(cmbLoadVisitorForm.SelectedValue.ToString()), conferenceName);
             //Show dialog
             allVisitorsForm.ShowDialog();
         }
