@@ -101,8 +101,8 @@ namespace MyDBDemo
             {
                 return string.Format(
                 "{0,-20}" + ConfName + "\n" +
-                "{1,-21}" + ContactNumber + "\n" +
-                "{2,-20}" + Date + "\n",
+                "{1,-20}" + ContactNumber + "\n" +
+                "{2,-30}" + Date.ToShortDateString() + "\n",
                 "Conference Name:", "Contact Number:", "Date:");
             }
         }

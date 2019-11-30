@@ -21,7 +21,7 @@
                 <MenuItem Header="_Delete Visitor" Click="BtnDelete_Click"/>
             </MenuItem>
             <MenuItem Header="_Show">
-                <MenuItem Header="All Information"/>
+                <MenuItem Header="All Information" Click="btnShowAllConfInfo_Click"/>
             </MenuItem>
         </Menu>
         <ToolBarTray>
@@ -38,7 +38,7 @@
                 <Button x:Name="btnDeleteToolBar" Click="BtnDelete_Click" ToolTip="Delete Visitor Information">
                     <Image Source="Images\Delete_red_16x.png"/>
                 </Button>
-                <Button x:Name="btnShowAllConfInfo" ToolTip="Show All Information">
+                <Button x:Name="btnShowAllConfInfo" Click="btnShowAllConfInfo_Click"  ToolTip="Show All Information">
                     <Image Source="Images\OpenFileDialog_16x.png"/>
                 </Button>
             </ToolBar>

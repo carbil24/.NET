@@ -84,10 +84,8 @@ namespace MyDBDemo
                                 @"'" + c.ConfName + @"', " +
                                 @"'" + c.ContactNumber + @"', " +
                                 @"'" + c.Date + @"')";
-                        SqlCommand cmd = new SqlCommand(command, con);
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                        con.Close();
+
+                        ExecuteNonQuery(command);
 
                         MessageBox.Show("Conference was added to the database", "Alert", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     }
@@ -137,20 +135,54 @@ namespace MyDBDemo
             dpDate.SelectedDate = null;
         }
 
-        private void BtnLoadConference_Click(object sender, RoutedEventArgs e)
+        private void BtnDeleteConference_Click(object sender, RoutedEventArgs e)
         {
+            if (cmbLoadVisitorForm.SelectedValue != null)
+            {
+                if (MessageBox.Show("Conference will be deleted permenantly.\nDo you want to proceed?", "Delete Conference Alert",
+                    MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.Yes)
+                {
+                    DataRow r = cmbLoadVisitorForm.SelectedItem as DataRow;
 
-            DataRowView r = cmbLoadVisitorForm.SelectedItem as DataRowView;
-            Conference conf = GetConferencerObject(r);
+                    string command1 = "Delete from Visitors where ConferenceID=" + r["Id"];
+                    ExecuteNonQuery(command1);
 
-            //Load all visitors form (MainWindow)
-            string conferenceName = conf.ConfName;
-            MainWindow allVisitorsForm = new MainWindow(conf, conferenceName);
-            //Show dialog
-            allVisitorsForm.ShowDialog();
+                    string command2 = "Delete from Conferences where Id=" + r["Id"];
+                    ExecuteNonQuery(command2);
+
+                    MessageBox.Show("Conference was deleted from the database", "Alert", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                    PopulateConferences();
+
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a conference", "No Selection", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private Conference GetConferencerObject(DataRowView r)
+        private void BtnLoadConference_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbLoadVisitorForm.SelectedValue != null)
+            {
+                DataRow r = cmbLoadVisitorForm.SelectedItem as DataRow;
+                Conference conf = GetConferencerObject(r);
+                //Load all visitors form (MainWindow)
+                string conferenceName = conf.ConfName;
+
+                MainWindow allVisitorsForm = new MainWindow(conf, conferenceName);
+                //Show dialog
+                allVisitorsForm.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Please select a conference", "No Selection", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
+        }
+
+        private Conference GetConferencerObject(DataRow r)
         {
             return new Conference()
             {
@@ -160,5 +192,24 @@ namespace MyDBDemo
                 Date = DateTime.Parse(r["ConfDate"].ToString())
             };
         }
+
+        private void ExecuteNonQuery(string command)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(dbConnection))
+                {
+                    SqlCommand cmd = new SqlCommand(command, con);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
     }
 }

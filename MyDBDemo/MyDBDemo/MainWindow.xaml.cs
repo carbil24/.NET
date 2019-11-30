@@ -27,9 +27,9 @@ namespace MyDBDemo
     {
         //string to tell us where is the database
         private string dbConnection = ConfigurationManager.ConnectionStrings["MyDBDemo.Properties.Settings.ConfDBConnectionString"].ConnectionString;
-        //private int conferenceID;
         private DataSet ds = new DataSet();
         public Conference ConferenceInfo { get; }
+
 
 
         public MainWindow(Conference conf, string _title)
@@ -41,7 +41,7 @@ namespace MyDBDemo
             PopulateCountries();
             LoadAllData();
             this.Title = _title + "Conference - Visitor Information";
-            txttbconferenceTitle.Text = _title + "Conference";
+            txttbconferenceTitle.Text = _title + " Conference";
         }
 
         private void LoadAllData()
@@ -338,6 +338,11 @@ namespace MyDBDemo
                 IsSpeaker = bool.Parse(r["Speaker"].ToString()),
                 CheckInDate = DateTime.Parse(r["CheckinDate"].ToString())
             };
+        }
+
+        private void btnShowAllConfInfo_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(ConferenceInfo.FullInfo, "Conference Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
