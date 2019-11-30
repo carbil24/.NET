@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,9 @@ namespace MyDBDemo
     /// </summary>
     public partial class Conferences : Window
     {
+        public Conference ConferenceInfo { get; }
+
+
         //string to tell us where is the database
         private string dbConnection = ConfigurationManager.ConnectionStrings["MyDBDemo.Properties.Settings.ConfDBConnectionString"].ConnectionString;
 
@@ -30,8 +34,9 @@ namespace MyDBDemo
             InitializeComponent();
             this.SizeToContent = SizeToContent.Height;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            PopulateConferences();
+            ConferenceInfo = new Conference();
 
+            PopulateConferences();
         }
 
         private void PopulateConferences()
@@ -62,39 +67,98 @@ namespace MyDBDemo
 
         private void BtnAddConference_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtConferenceName.Text))
-                MessageBox.Show("Please enter a conference name first");
-            else
+            if (CheckAllInput())
             {
+                ConferenceInfo.ConfName = txtConferenceName.Text;
+                ConferenceInfo.ContactNumber = txtContactNumber.Text;
+                ConferenceInfo.Date = dpDate.SelectedDate.Value;
+                ClearForm();
                 try
                 {
                     using (SqlConnection con = new SqlConnection(dbConnection))
                     {
-                        string command = @"INSERT INTO Conferences (Name) VALUES (" +
-                            @"'" + txtConferenceName.Text + @"')";
+                        Conference c = ConferenceInfo;
+                        string command =
+                                "INSERT into Conferences" +
+                                "(Name, ContactNumber, ConfDate) VALUES (" +
+                                @"'" + c.ConfName + @"', " +
+                                @"'" + c.ContactNumber + @"', " +
+                                @"'" + c.Date + @"')";
                         SqlCommand cmd = new SqlCommand(command, con);
                         con.Open();
                         cmd.ExecuteNonQuery();
                         con.Close();
+
+                        MessageBox.Show("Conference was added to the database", "Alert", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error: " + ex.Message);
                 }
-                ////Repopulate my conferences list
-                PopulateConferences();
-                txtConferenceName.Text = "";
-            }
+            }    
+          
+            ////Repopulate my conferences list
+            PopulateConferences();
         }
 
-        private void CmbLoadVisitorForm_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private bool CheckAllInput()
         {
+            Regex contactNumberPattern = new Regex(@"^\d{10}$");
+            StringBuilder msg = new StringBuilder();
+
+            //Conference Name
+            if (string.IsNullOrEmpty(txtConferenceName.Text))
+                msg.AppendLine("Conference Name is a required field");
+
+            //Contact Number
+            if (string.IsNullOrEmpty(txtContactNumber.Text))
+                msg.AppendLine("Contact Number is a required field");
+            else if (!(contactNumberPattern.IsMatch(txtContactNumber.Text)))
+                msg.AppendLine("Contact Number must be a number of 10 digits");
+
+            //Date
+            if (!dpDate.SelectedDate.HasValue)
+                msg.AppendLine("Date is not selected");
+
+            if (!string.IsNullOrEmpty(msg.ToString()))
+            {
+                MessageBox.Show(msg.ToString(), "Form Missing Data", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ClearForm()
+        {
+            txtConferenceName.Clear();
+            txtContactNumber.Clear();
+            dpDate.SelectedDate = null;
+        }
+
+        private void BtnLoadConference_Click(object sender, RoutedEventArgs e)
+        {
+
+            DataRowView r = cmbLoadVisitorForm.SelectedItem as DataRowView;
+            Conference conf = GetConferencerObject(r);
+
             //Load all visitors form (MainWindow)
-            string conferenceName = (cmbLoadVisitorForm.SelectedItem as DataRow)["Name"].ToString();
-            MainWindow allVisitorsForm = new MainWindow(int.Parse(cmbLoadVisitorForm.SelectedValue.ToString()), conferenceName);
+            string conferenceName = conf.ConfName;
+            MainWindow allVisitorsForm = new MainWindow(conf, conferenceName);
             //Show dialog
             allVisitorsForm.ShowDialog();
+        }
+
+        private Conference GetConferencerObject(DataRowView r)
+        {
+            return new Conference()
+            {
+                Id = int.Parse(r["Id"].ToString()),
+                ConfName = r["Name"].ToString(),
+                ContactNumber = r["ContactNumber"].ToString(),
+                Date = DateTime.Parse(r["ConfDate"].ToString())
+            };
         }
     }
 }

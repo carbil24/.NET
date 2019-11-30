@@ -49,6 +49,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>conference-icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -71,6 +74,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Conference.cs" />
     <Compile Include="Visitor.cs" />
     <Compile Include="VisitorsWindow.xaml.cs">
       <DependentUpon>VisitorsWindow.xaml</DependentUpon>
@@ -149,6 +153,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>ConfDB.mdf</DependentUpon>
     </Content>
+    <Resource Include="conference-icon.ico" />
+    <Resource Include="Images\Delete_red_16x.png" />
+    <Resource Include="Images\conference-icon.jpg" />
+    <Resource Include="Images\ConferenceInformation-icon.jpg" />
+    <Resource Include="Images\EditTableRow_16x.png" />
+    <Resource Include="Images\NewFile_16x.png" />
+    <Resource Include="Images\OpenfileDialog_16x.png" />
+    <Resource Include="Images\Save_16x.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

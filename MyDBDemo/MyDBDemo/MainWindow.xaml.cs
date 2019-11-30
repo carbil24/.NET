@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,15 +27,17 @@ namespace MyDBDemo
     {
         //string to tell us where is the database
         private string dbConnection = ConfigurationManager.ConnectionStrings["MyDBDemo.Properties.Settings.ConfDBConnectionString"].ConnectionString;
-        private int conferenceID;
+        //private int conferenceID;
         private DataSet ds = new DataSet();
+        public Conference ConferenceInfo { get; }
 
 
-        public MainWindow(int _conferenceID, string _title)
+        public MainWindow(Conference conf, string _title)
         {
             InitializeComponent();
             this.SizeToContent = SizeToContent.Height;
-            conferenceID = _conferenceID;
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            ConferenceInfo = conf;
             PopulateCountries();
             LoadAllData();
             this.Title = _title + "Conference - Visitor Information";
@@ -42,7 +46,7 @@ namespace MyDBDemo
 
         private void LoadAllData()
         {
-            string command = @"SELECT * from Visitors where conferenceId = " + conferenceID;
+            string command = @"SELECT * from Visitors where conferenceId = " + ConferenceInfo.Id;
             //DataSet ds = new DataSet(); moved to class level
 
             try
@@ -191,11 +195,7 @@ namespace MyDBDemo
             {
                 //Add to the database
                 Visitor v = newVisitorWindow.VisitorInfo;
-                try
-                {
-                    using (SqlConnection con = new SqlConnection(dbConnection))
-                    {
-                        string command =
+                string command =
                             "INSERT into Visitors" +
                             "(FullName, Major, Country, Status, Speaker, CheckinDate, ConferenceID) VALUES (" +
                             @"'" + v.FullName + @"', " +
@@ -204,22 +204,9 @@ namespace MyDBDemo
                             @"'" + v.VisitorStatus.ToString() + @"', " +
                             @"'" + v.IsSpeaker + @"', " +
                             @"'" + v.CheckInDate + @"', " +
-                            conferenceID + ")";
-                        SqlCommand cmd = new SqlCommand(command, con);
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                        con.Close();
+                            ConferenceInfo.Id + ")";
 
-                        //Updating my grid.
-                        ds.Tables["Visitors"].Clear();
-                        LoadAllData();
-                    }
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
+                ExecuteNonQuery(command);               
             }
         }
 
@@ -228,27 +215,15 @@ namespace MyDBDemo
             if (gridDbData.SelectedIndex > 0 && gridDbData.SelectedIndex != gridDbData.Items.Count)
             {
                 DataRowView r = gridDbData.SelectedItem as DataRowView;
-                Visitor existing = new Visitor()
-                {
-                    FullName = r["FullName"].ToString(),
-                    Major = r["Major"].ToString(),
-                    Country = r["Country"].ToString(),
-                    VisitorStatus = r["Status"].ToString() == Status.Teacher.ToString() ? Status.Teacher :
-                                    r["Status"].ToString() == Status.Student.ToString() ? Status.Student : Status.Proffessional,
-                    IsSpeaker = bool.Parse(r["Speaker"].ToString()),
-                    CheckInDate = DateTime.Parse(r["CheckinDate"].ToString())
-                };
+                Visitor existing = GetVisitorObject(r);
+
                 //MessageBox.Show(gridDbData.SelectedItem.ToString());
                 VisitorsWindow modifyVisitor = new VisitorsWindow(ds.Tables["Countries"].Rows, existing);
 
                 if (modifyVisitor.ShowDialog().Value)
                 {
-                    try
-                    {
-                        Visitor v = modifyVisitor.VisitorInfo;
-                        using (SqlConnection con = new SqlConnection(dbConnection))
-                        {
-                            string command =
+                    Visitor v = modifyVisitor.VisitorInfo;
+                    string command =
                                 "UPDATE Visitors SET " +
                                 @"FullName ='" + v.FullName + @"', " +
                                 @"Major ='" + v.Major + @"', " +
@@ -257,20 +232,7 @@ namespace MyDBDemo
                                 @"Speaker ='" + v.IsSpeaker + @"', " +
                                 @"CheckinDate ='" + v.CheckInDate + @"' WHERE Id =" + r["Id"];
 
-                            SqlCommand cmd = new SqlCommand(command, con);
-                            con.Open();
-                            cmd.ExecuteNonQuery();
-                            con.Close();
-
-                            //Updating my grid.
-                            ds.Tables["Visitors"].Clear();
-                            LoadAllData();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error: " + ex.Message);
-                    }
+                    ExecuteNonQuery(command);                  
                 }              
             }
             else
@@ -283,35 +245,99 @@ namespace MyDBDemo
         {
             if (gridDbData.SelectedIndex > 0 && gridDbData.SelectedIndex != gridDbData.Items.Count)
             {
-                DataRowView r = gridDbData.SelectedItem as DataRowView;
-
-                try
+                if (MessageBox.Show("Record will be deleted permenantly.\nDo you want to proceed?", "Delete Record Alert", 
+                    MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.Yes)
                 {
-                    using (SqlConnection con = new SqlConnection(dbConnection))
-                    {
-                        string command =
-                            "Delete from Visitors where Id=" + r["Id"];                            
-                        SqlCommand cmd = new SqlCommand(command, con);
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-
-                        //Updating my grid.
-                        ds.Tables["Visitors"].Clear();
-                        LoadAllData();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message);
-                }
+                    DataRowView r = gridDbData.SelectedItem as DataRowView;
+                    string command = "Delete from Visitors where Id=" + r["Id"];
+                    ExecuteNonQuery(command);                  
+                }              
             }
             else
             {
                 MessageBox.Show("Please select a record first", "No selection", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void ExecuteNonQuery(string command)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(dbConnection))
+                {
+                    SqlCommand cmd = new SqlCommand(command, con);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+
+                    //Updating my grid.
+                    ds.Tables["Visitors"].Clear();
+                    LoadAllData();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
 
 
+        private void SaveToCSV_Click(object sender, RoutedEventArgs e)
+        {
+            //Make sure there is data to save
+            if(gridDbData.Items.Count == 1)
+            {
+                MessageBox.Show("Visitor's list is empty. \nAdd visitors to the list first.", "Alert", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                //First choose where to save to
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "CSV File|*.csv";
+
+                //Make sure chose a file name and location
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    StringBuilder report = new StringBuilder();
+                    //Adding table header
+                    report.AppendLine(this.Title.ToString());
+                    report.AppendLine("FullName,Major,Country,Status,Is Speaker,CheckIn Date");
+                    //Extract data from the grid >> utilize the visitor's class
+                    for (int i = 0; i < gridDbData.Items.Count-1; i++)
+                    {
+                        report.AppendLine(GetVisitorObject(gridDbData.Items[i] as DataRowView).AllData);
+                    }
+
+                    //Save to a file
+                    try
+                    {
+                        File.WriteAllText(saveFileDialog.FileName, report.ToString());
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        MessageBox.Show("Error saving report to CSV\n" + ex.Message, "Error Saving", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    //Message of confirmation
+                    MessageBox.Show("File saved succesfully.\nLocation: " + saveFileDialog.FileName, "Report Saved", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            
+        }
+
+        private Visitor GetVisitorObject(DataRowView r)
+        {
+            return new Visitor()
+            {
+                FullName = r["FullName"].ToString(),
+                Major = r["Major"].ToString(),
+                Country = r["Country"].ToString(),
+                VisitorStatus = r["Status"].ToString() == Status.Teacher.ToString() ? Status.Teacher :
+                                    r["Status"].ToString() == Status.Student.ToString() ? Status.Student : Status.Proffessional,
+                IsSpeaker = bool.Parse(r["Speaker"].ToString()),
+                CheckInDate = DateTime.Parse(r["CheckinDate"].ToString())
+            };
         }
     }
 }
