@@ -1,0 +1,65 @@
+﻿<Window x:Class="Exam2_Part2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Exam2_Part2"
+        mc:Ignorable="d"
+        Title="John Abbott College Grocery Store" Height="420" Width="350">
+    <StackPanel>
+        <TextBlock Text="Shopping Cart" FontSize="24" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+        <GroupBox Header="Fruit" Margin="20,5,20,5">
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Apple ($0.50)" Grid.Column="0" Grid.Row="0" Margin="0,10,0,0" />
+                <Button x:Name="btnAddApple" Grid.Row="0" Grid.Column="1" Content="+" Margin="0,10,0,0" Click="BtnAddApple_Click"/>
+                <Button x:Name="btnSubstractApple" Grid.Row="0" Grid.Column="2" Content="-" Margin="0,10,0,0" Click="BtnSubstractApple_Click"/>
+                <TextBlock x:Name="txtbAppleQty" Grid.Row="0" Grid.Column="3" Margin="0,10,0,0" TextAlignment="Center" FontWeight="Bold"/>
+
+                <TextBlock Text="Banana($0.75)" Grid.Row="1" Grid.Column="0" Margin="0,10,0,0" />
+                <Button x:Name="btnAddBanana" Grid.Row="1" Grid.Column="1" Content="+" Margin="0,10,0,0" Click="BtnAddBanana_Click"/>
+                <Button x:Name="btnSubstractBanana" Grid.Row="1" Grid.Column="2" Content="-" Margin="0,10,0,0" Click="BtnSubstractBanana_Click"/>
+                <TextBlock x:Name="txtbBananaQty" Grid.Row="1" Grid.Column="3" Margin="0,10,0,0" TextAlignment="Center" FontWeight="Bold"/>
+
+                <TextBlock Text="Orange($1.00)" Grid.Row="2" Grid.Column="0" Margin="0,10,0,0" />
+                <Button x:Name="btnAddOrange" Grid.Row="2" Grid.Column="1" Content="+" Margin="0,10,0,0" Click="BtnAddOrange_Click"/>
+                <Button x:Name="btnSubstractOrange" Grid.Row="2" Grid.Column="2" Content="-" Margin="0,10,0,0" Click="BtnSubstractOrange_Click"/>
+                <TextBlock x:Name="txtbOrangeQty" Grid.Row="2" Grid.Column="3" Margin="0,10,0,0" TextAlignment="Center" FontWeight="Bold"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Payment" Margin="20,5,20,5">
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <RadioButton x:Name="rbtnCard" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Content="Credit/Debit (Minimum $5.00)" Margin="0,10,0,0" Click="RbtnCard_Click" />
+                <RadioButton x:Name="rbtnCash" Grid.Row="1" Grid.Column="0" Content="Cash:" FontWeight="Normal"  Margin="0,10,0,0" Click="RbtnCash_Click"/>
+                <TextBox x:Name="txtCash" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Height="20" Margin="0,10,0,0"/>
+                <TextBlock Text="Total:" Grid.Row="2" Grid.Column="0" Margin="0,10,0,0" />
+                <TextBox x:Name="txtTotal" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Height="20" Margin="0,10,0,0" />
+
+                <Button x:Name="btnCheckOut" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Checkout" Margin="0,10,0,0" Width="100" FontWeight="Bold" Click="BtnCheckOut_Click"/>
+                <Button x:Name="btnReset" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Content="Reset" FontStyle="Italic" Margin="0,10,0,0" Width="100" Click="BtnReset_Click"/>
+            </Grid>
+        </GroupBox>
+    </StackPanel>
+</Window>
