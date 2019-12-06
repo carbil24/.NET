@@ -13,48 +13,78 @@
         </Grid.ColumnDefinitions>
 
         <!--Contact Grid-->
-        <DataGrid x:Name="dgContacts" IsReadOnly="True" Width="311" SelectionChanged="DgContacts_SelectionChanged" >
+        <DataGrid x:Name="dgContacts" IsReadOnly="True" Width="311" MouseDoubleClick="DgContacts_MouseDoubleClick" >
             <DataGrid.ContextMenu>
                 <ContextMenu x:Name="ContactMenu">
-                    <MenuItem Header="Edit" Click="RighClickEdit_Click"/>
-                    <MenuItem Header="Delete" Click="RighClickDelete_Click"/>
+                    <MenuItem Header="Edit" Click="RightClickEdit_Click"/>
+                    <MenuItem Header="Delete" Click="RightClickDelete_Click"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
         <Expander x:Name="expForm" ExpandDirection="Right" Grid.Column="1" Margin="10,0,0,0">
-            <Grid Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                                
-                <!--First Row-->
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="Contact Details" FontSize="25" FontWeight="Bold" Grid.ColumnSpan="2" Margin="0,0,20,0"/>
-                
-                <!--Second Row-->
-                <TextBlock Grid.Column="0" Grid.Row="1" Text="Name" FontWeight="Bold"/>
-                <TextBox x:Name="txtName" Grid.Column="1" Grid.Row="1" Width="150"/>
-                
-                <!--Third Row-->
-                <TextBlock Grid.Column="0" Grid.Row="2" Text="Phone" FontWeight="Bold"/>
-                <TextBox x:Name="txtPhone" Grid.Column="2" Grid.Row="2" Width="150"/>
-                
-                <!--Fourth Row-->
-                <TextBlock Grid.Column="0" Grid.Row="3" Text="Address" FontWeight="Bold"/>
-                <TextBox x:Name="txtAddress" Grid.Column="3" Grid.Row="3" Width="150" Height="40"/>
-                
-                <!--Fifth Row-->
-                <Button x:Name="btnAdd" Content="Add New Contact" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,30,0,0" Click="BtnAdd_Click"/>
-                <Button x:Name="btnModify" Content="Update Contact" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,30,0,0" Click="BtnModify_Click" Visibility="Hidden"/>
+            <StackPanel>
+                <GroupBox Header="Contact Details" Padding="10">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
 
-            </Grid>
+                        <!--First Row-->
+                        <!-- <TextBlock Grid.Column="0" Grid.Row="0" Text="Contact Details" FontSize="25" FontWeight="Bold" Grid.ColumnSpan="2" Margin="0,0,20,0"/> -->
+
+                        <!--Second Row-->
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Name" FontWeight="Bold"/>
+                        <TextBox x:Name="txtName" Grid.Column="1" Grid.Row="1" Width="150"/>
+
+                        <!--Third Row-->
+                        <TextBlock Grid.Column="0" Grid.Row="2" Text="Phone" FontWeight="Bold"/>
+                        <TextBox x:Name="txtPhone" Grid.Column="2" Grid.Row="2" Width="150"/>
+
+                        <!--Fourth Row-->
+                        <TextBlock Grid.Column="0" Grid.Row="3" Text="Address" FontWeight="Bold"/>
+                        <TextBox x:Name="txtAddress" Grid.Column="3" Grid.Row="3" Width="150" Height="40"/>
+
+                        <!--Fifth Row-->
+                        <Button x:Name="btnAdd" Content="Add New Contact" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,30,0,0" Click="BtnAdd_Click"/>
+                        <Button x:Name="btnModify" Content="Update Contact" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,30,0,0" Click="BtnModify_Click" Visibility="Hidden"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Search">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="txtLetter" Text="A" FontWeight="Bold" TextAlignment="Center" />
+                            <Slider x:Name="slFirstLetter" Grid.Column="1" Maximum="26" LostMouseCapture="SlFirstLetter_LostMouseCapture" IsSnapToTickEnabled="True"/>
+                        </Grid>
+                        <Grid Margin="0,20,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Name" Margin="0,0,10,0" Grid.Row="0" Grid.Column="0"/>
+                            <TextBox x:Name="txtNameSearch" Grid.Row="0" Grid.Column="1" TextChanged="TxtPhoneSearch_TextChanged"/>
+                            <TextBlock Text="Phone #"  Margin="0,0,10,0" Grid.Row="1" Grid.Column="0"/>
+                            <TextBox x:Name="txtPhoneSearch" Grid.Row="1" Grid.Column="1" TextChanged="TxtPhoneSearch_TextChanged"/>
+                        </Grid>
+                        <Button x:Name="btnClearSearch" Content="Clear Search" Margin="10" Click="BtnClearSearch_Click" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
         </Expander>
     </Grid>
 </Window>
