@@ -10,7 +10,7 @@ using System.Data.Entity;
 namespace MyTimeTracker.Models
 {
     //2- Inherit from DBContext
-    public class TimeTrackerDBContext : DbContext
+    class TimeTrackerDBContext : DbContext
     {
         //Get the DB sets from DB Tables
         public DbSet<Employee> Employees { get; set; }

@@ -23,26 +23,25 @@ namespace MyTimeTracker
     /// </summary>
     public partial class MainWindow : Window
     {
+        private TimeTrackerViewModel repo = new TimeTrackerViewModel();
         public MainWindow()
         {
             InitializeComponent();
-            TimeTrackerDBContext context = new TimeTrackerDBContext();
+            repo.AddNewEmployee(GenerateTestEmployee());
 
-            EmployeeAddTest(context);
-
-            dgEmployees.ItemsSource = (from e in context.Employees
-                                       select e).ToList();
+            dgEmployees.ItemsSource = repo.GetAllEmployeesData();
         }
 
-        private void EmployeeAddTest(TimeTrackerDBContext context)
+        private Employee GenerateTestEmployee()
         {
-            Employee emp = new Employee()
+            return new Employee()
             {
                 FirstName = "Bruce",
                 LastName = "Wayne",
-                Department = "Sales",
-                Role = "Batman",
+                Department = "TEST",
+                Role = "TEST",
                 HireDate = DateTime.Now.AddYears(-2),
+                Salary = new Random().Next(100,100000),
                 DOB = DateTime.Now.AddYears(-30),
                 TimeCards = new List<TimeCard>()
                 {
@@ -60,9 +59,55 @@ namespace MyTimeTracker
                     }
                 }
             };
+        }
 
-            context.Employees.Add(emp);
-            context.SaveChanges();
+        private void DgEmployees_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Employee current = dgEmployees.SelectedItem as Employee;
+            //Text block vlaue
+            txtEmployeRecord.Text = string.Format("ID#{0} - {1} {2} | {3}", current.ID, current.LastName, current.FirstName, current.Role);
+
+            //Set the timecard data grid
+            dgTimeCards.ItemsSource = current.TimeCards;
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {       
+            if (dgEmployees.SelectedItem != null && MessageBox.Show("Are you sure you want to delete?\n" +
+                            "This will delete the time card records as well", "Confirm Delete", 
+                            MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    repo.DeleteEmployeeRecord((dgEmployees.SelectedItem as Employee).ID);
+                    dgEmployees.ItemsSource = repo.GetAllEmployeesData();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void BtnSaveNewRole_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgEmployees.SelectedItem == null || string.IsNullOrEmpty(txtRole.Text))
+            {
+                MessageBox.Show("Please select an employee first or fill the role");
+            }
+            else
+            {
+                Employee emp = dgEmployees.SelectedItem as Employee;
+                emp.Role = txtRole.Text;
+                repo.UpdateEmployee(emp);
+                dgEmployees.ItemsSource = repo.GetAllEmployeesData();
+                txtRole.Clear();
+            }
+        }
+
+        private void BtnSearchLast_Click(object sender, RoutedEventArgs e)
+        {
+            dgEmployees.ItemsSource = repo.SearchByLastName(txtLastName.Text);
         }
     }
 }

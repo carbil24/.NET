@@ -29,7 +29,7 @@ namespace MyTimeTracker.Models
 
         public DateTime HireDate { get; set; }
 
-        public DateTime? DOB { get; set; }
+        public DateTime? DOB { get; set; } // Now is null
 
         [Range(100,100000)]
         public double Salary { get; set; }
