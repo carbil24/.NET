@@ -170,7 +170,7 @@ namespace Exam2_Part2
             }
             else if (string.IsNullOrEmpty(TipeOfPayment))
             {
-                msg.AppendLine("Please select a payment Type.");
+                msg.AppendLine("Please select a payment type.");
             }
             else if (TipeOfPayment.Equals("Credit/Debit"))
             {
