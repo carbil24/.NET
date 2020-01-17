@@ -64,7 +64,7 @@ namespace MyTimeTracker
         private void DgEmployees_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Employee current = dgEmployees.SelectedItem as Employee;
-            //Text block vlaue
+            //Text block value
             txtEmployeRecord.Text = string.Format("ID#{0} - {1} {2} | {3}", current.ID, current.LastName, current.FirstName, current.Role);
 
             //Set the timecard data grid

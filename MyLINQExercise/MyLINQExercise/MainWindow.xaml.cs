@@ -199,34 +199,91 @@ namespace MyLINQExercise
         // Average score of each test 
         private void RbtnAverageScore_Click(object sender, RoutedEventArgs e)
         {
+            txtOutput.Text = "\n";
+            var studentAvg = from s in studentList
+                             select s.Scores[0];
+            txtOutput.Text += "Exam 1 average = " + studentAvg.Average() + "\n";
 
+            studentAvg = from s in studentList
+                         select s.Scores[1];
+            txtOutput.Text += "Exam 2 average = " + studentAvg.Average() + "\n";
+
+            studentAvg = from s in studentList
+                         select s.Scores[2];
+            txtOutput.Text += "Exam 3 average = " + studentAvg.Average() + "\n";
+
+            studentAvg = from s in studentList
+                         select s.Scores[3];
+            txtOutput.Text += "Exam 4 average = " + studentAvg.Average() + "\n";
         }
 
         // Students who are also teachers
         private void RbtnStudentsAlsoTeachers_Click(object sender, RoutedEventArgs e)
         {
+            var studentTeacher = from s in studentList
+                                 join t in teacherList
+                                 on new { s.First, s.Last }
+                                 equals new { t.First, t.Last }
+                                 select s.First + " " + s.Last;
 
+            txtOutput.Text = "\n";
+            foreach (var s in studentTeacher)
+            {
+                txtOutput.Text += s + "\n";
+            }
         }
 
 
         // Courses of a duration of 15 weeks (alphabetical order by name)
         private void RbtnCourses15_Click(object sender, RoutedEventArgs e)
         {
+            var courses15Weeks = from c in courseList
+                                 where c.Duration == 15
+                                 orderby c.Name
+                                 select c;
 
+            txtOutput.Text = "\n";
+            foreach (var c in courses15Weeks)
+            {
+                txtOutput.Text += "- " + c.Name + "\n";
+            }
         }
 
 
         // Courses held in the Winter semester (order by duration)
         private void RbtnCoursesWinter_Click(object sender, RoutedEventArgs e)
         {
+            var winterCourses = from c in courseList
+                                where c.Semester == "Winter"
+                                orderby c.Duration
+                                select c;
 
+            txtOutput.Text = "\n";
+            foreach (var c in winterCourses)
+            {
+                txtOutput.Text += "- " + c.Name + "\n";
+            }
         }
 
 
         // Courses grouped by semester
         private void RbtnCoursesbySemester_Click(object sender, RoutedEventArgs e)
         {
+            var courseGroupSemeter = from c in courseList
+                                     group c by c.Semester
+                         into courseGroup
+                                     orderby courseGroup.Key
+                                     select courseGroup;
 
+            txtOutput.Text = "\n";
+            foreach (var group in courseGroupSemeter)
+            {
+                txtOutput.Text += group.Key + "\n";
+                foreach (Course course in group)
+                {
+                    txtOutput.Text += string.Format("\t{0}\n", course.Name);
+                }
+            }
         }
     }
 

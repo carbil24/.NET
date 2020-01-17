@@ -22,12 +22,12 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Apple ($0.50)" Grid.Column="0" Grid.Row="0" Margin="0,10,0,0" />
-                <Button x:Name="btnAddApple" Grid.Row="0" Grid.Column="1" Content="+" Margin="0,10,0,0" Click="BtnAddApple_Click"/>
+                <Button x:Name="btnAddApple" Grid.Row="0" Grid.Column="1" Content="+" Margin="0,10,0,0" Click="BtnAddApple_Click" />
                 <Button x:Name="btnSubstractApple" Grid.Row="0" Grid.Column="2" Content="-" Margin="0,10,0,0" Click="BtnSubstractApple_Click"/>
                 <TextBlock x:Name="txtbAppleQty" Grid.Row="0" Grid.Column="3" Margin="0,10,0,0" TextAlignment="Center" FontWeight="Bold"/>
 
                 <TextBlock Text="Banana($0.75)" Grid.Row="1" Grid.Column="0" Margin="0,10,0,0" />
-                <Button x:Name="btnAddBanana" Grid.Row="1" Grid.Column="1" Content="+" Margin="0,10,0,0" Click="BtnAddBanana_Click"/>
+                <Button x:Name="btnAddBanana" Grid.Row="1" Grid.Column="1" Content="+" Click="BtnAddBanana_Click" Height="20" VerticalAlignment="Bottom"/>
                 <Button x:Name="btnSubstractBanana" Grid.Row="1" Grid.Column="2" Content="-" Margin="0,10,0,0" Click="BtnSubstractBanana_Click"/>
                 <TextBlock x:Name="txtbBananaQty" Grid.Row="1" Grid.Column="3" Margin="0,10,0,0" TextAlignment="Center" FontWeight="Bold"/>
 

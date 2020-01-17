@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace Test_1_Part_2
 {
+    #region Program
     class Program
     {
-        static int totalSecondsWorked;
-        static TimeStamp totalTimeWorked;
-        static double totalPayment;
-
         static void Main(string[] args)
         {
 
@@ -70,7 +67,6 @@ namespace Test_1_Part_2
                 string record;
                 try
                 {
-
                     using (StreamReader stream = new StreamReader(fileName))
                     {
                         while ((record = stream.ReadLine()) != null)
@@ -86,11 +82,6 @@ namespace Test_1_Part_2
 
                             addTimeWorkedToEmployee(employeeList, int.Parse(empData[0]), timeWorked);
 
-
-                            totalSecondsWorked += timeWorked.ConvertToSeconds();
-
-                            totalTimeWorked = timeWorked.ConvertFromSeconds(totalSecondsWorked);
-
                         }
                     }
                 }
@@ -104,46 +95,56 @@ namespace Test_1_Part_2
 
         }
 
+        #region Helper Method
         public static void addTimeWorkedToEmployee(List<Employee> employeeList, int employeeNumber, TimeStamp timeWorked)
         {
 
             for (int i = 0; i < employeeList.Count; i++)
             {
-                if (employeeList[i].EmployeeNumber == (employeeNumber))
+                if (employeeList[i].EmployeeNumber == employeeNumber)
                 {
                     employeeList[i].TimeWorked = TimeStamp.AddTwoTimeStamps(employeeList[i].TimeWorked, timeWorked);
 
-                    employeeList[i].Payment = employeeList[i].TimeWorked.Hours * employeeList[i].HourlyRate;
-
-                    totalPayment += employeeList[i].Payment;
+                    employeeList[i].Payment = employeeList[i].TimeWorked.ConvertToSeconds() * (employeeList[i].HourlyRate / 3600);
 
                     break;
                 }
             }
-        }
+        }
+        #endregion
 
         public static void printReport(List<Employee> employeeList, string fileName)
         {
-
-
-            StreamWriter streamWriter = null;
-            StringBuilder AllLines = new StringBuilder();
-
-            AllLines.AppendLine("Emp #  Last Name   First Name  Time Worked Hourly Wage Pay");
-            AllLines.AppendLine("-----  ---------   ----------  ----------- ----------- ----------");
             try
             {
+                StreamWriter streamWriter = null;
+                StringBuilder AllLines = new StringBuilder();
+
+                double totalPayment = 0;
+                int totalSecondsWorked = 0;
+                TimeStamp totalTimeWorked = null;
+
+                AllLines.AppendLine("Emp #  Last Name   First Name  Time Worked Hourly Wage     Pay");
+                AllLines.AppendLine("-----  ---------   ----------  ----------- -----------    ----------");
 
                 foreach (Employee employee in employeeList)
                 {
                     AllLines.AppendLine(employee.ToString());
+
+                    totalPayment += employee.Payment;
+
+                    totalSecondsWorked += employee.TimeWorked.ConvertToSeconds();
+
+                    totalTimeWorked = employee.TimeWorked.ConvertFromSeconds(totalSecondsWorked);
+
                 }
-             
 
-                AllLines.AppendLine("Total Time Worked = " + totalTimeWorked.ToString());
+                AllLines.AppendLine();
 
-                AllLines.AppendLine("Total Pay = " + totalPayment.ToString());
-                 
+                AllLines.AppendLine(String.Format("Total Time Worked = {0}", totalTimeWorked));
+
+                AllLines.AppendLine(String.Format("Total Pay = {0:C}", totalPayment));
+
 
                 using (streamWriter = new StreamWriter(fileName, true))
                 {
@@ -163,7 +164,9 @@ namespace Test_1_Part_2
 
         }
     }
+    #endregion
 
+    #region Employee
     class Employee
     {
         private int _employeeNumber;
@@ -247,30 +250,27 @@ namespace Test_1_Part_2
             }
         }
 
-//Methods
-//Constructors
-public Employee(int _employeeNumber, string _lastName, string _firstName, double _hourlyRate)
+        //Methods
+        //Constructors
+        public Employee(int _employeeNumber, string _lastName, string _firstName, double _hourlyRate)
         {
             EmployeeNumber = _employeeNumber;
             LastName = _lastName;
             FirstName = _firstName;
             HourlyRate = _hourlyRate;
-            _timeWorked = new TimeStamp();
-        }
-
-        public Employee(int _employeeNumber, TimeStamp _timeStamp)
-        {
-            EmployeeNumber = _employeeNumber;
-            TimeWorked = _timeStamp;
+            TimeWorked = new TimeStamp();
+            Payment = 0;
         }
 
         public override string ToString()
         {
-            return String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", EmployeeNumber, LastName, FirstName, TimeWorked, HourlyRate, Payment);
+            return String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,10:C2} {5,10:C2}", EmployeeNumber, LastName, FirstName, TimeWorked, HourlyRate, Payment);
 
         }
     }
+    #endregion
 
+    #region TimeStamp
     class TimeStamp
     {
 
@@ -417,4 +417,5 @@ public Employee(int _employeeNumber, string _lastName, string _firstName, double
             return input;
         }
     }
+    #endregion
 }
