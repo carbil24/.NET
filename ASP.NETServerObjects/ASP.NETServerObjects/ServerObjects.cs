@@ -23,7 +23,23 @@ namespace ASP.NETServerObjects
 
         public int GetResponseStatusCodeFromContext()
         {
+            String myConnection = Global.CONNECTION;
+            //String myCarlosVar = (String)HttpContext.Current.Application["CarlosVar"];
+            String myCarlosVar = HttpContext.Current.Application["CarlosVarApplication"].ToString();
+
             return HttpContext.Current.Response.StatusCode;
+        }
+
+        public int AddNumbers(int n1, int n2)
+        {
+            if ((n1 + n2) > 0)
+            {
+                return n1 + n2;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

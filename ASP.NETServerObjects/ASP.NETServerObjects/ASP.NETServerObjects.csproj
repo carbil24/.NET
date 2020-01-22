@@ -67,13 +67,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Global.asax" />
     <Content Include="RequestObject.aspx" />
     <Content Include="ResponseObject.aspx" />
     <Content Include="ServerObject.aspx" />
+    <Content Include="SessionTest.aspx" />
     <Content Include="Summary.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestObject.aspx.cs">
       <DependentUpon>RequestObject.aspx</DependentUpon>
@@ -97,6 +102,13 @@
       <DependentUpon>ServerObject.aspx</DependentUpon>
     </Compile>
     <Compile Include="ServerObjects.cs" />
+    <Compile Include="SessionTest.aspx.cs">
+      <DependentUpon>SessionTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SessionTest.aspx.designer.cs">
+      <DependentUpon>SessionTest.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
