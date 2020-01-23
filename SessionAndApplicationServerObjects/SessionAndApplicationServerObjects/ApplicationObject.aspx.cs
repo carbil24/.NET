@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -14,6 +15,11 @@ namespace SessionAndApplicationServerObjects
             //string connectionString = Application["ConnectionString"].ToString();
 
             string connectionString = Global.ConnectionString;
+
+            DataSet cachedData = Global.MyDataSet;
+
+            Response.Write(connectionString);
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -12,10 +13,13 @@ namespace SessionAndApplicationServerObjects
     {
         public static readonly string ConnectionString = "connection information";
         protected DateTime beginRequestTime;
+        public static DataSet MyDataSet;
+
+
 
         protected void Application_Start(object sender, EventArgs e)
         {
-
+            DataSet MyDataSet = (DataSet)Application["MyDataSet"];
         }
 
         protected void Session_Start(object sender, EventArgs e)
@@ -27,7 +31,7 @@ namespace SessionAndApplicationServerObjects
         {
 
             beginRequestTime = DateTime.Now;
-            Response.Write("Begin Request from Application on " + beginRequestTime);
+            Response.Write("Begin Request from Application on " + beginRequestTime + "<br/>");
             //Trace.WriteLine("Request Begins");
         }
 
