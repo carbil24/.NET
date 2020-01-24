@@ -19,7 +19,7 @@ namespace SessionAndApplicationServerObjects
 
         protected void Application_Start(object sender, EventArgs e)
         {
-            DataSet MyDataSet = (DataSet)Application["MyDataSet"];
+            MyDataSet = (DataSet)Application["MyDataSet"];
         }
 
         protected void Session_Start(object sender, EventArgs e)
