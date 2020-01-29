@@ -10,7 +10,10 @@ namespace StudentsMVC.Models
         public int Id { get; set; }
         public string StudentName { get; set; }
         public int Age { get; set; }
-        public Classroom StudentClassroom { get; set; }
-        public Address StudentAddress { get; set; }
+        //public Classroom StudentClassroom { get; set; }
+        //public Address StudentAddress { get; set; }
+        public string StudentClassroom { get; set; }
+        public string StudentAddress { get; set; }
+
     }
 }

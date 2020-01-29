@@ -18,7 +18,7 @@ namespace StudentsMVC.Controllers
         // GET: Student/Details/5
         public ActionResult Details(int id)
         {
-            var student = MvcApplication.classroomList.Where(s => s.Id == id).FirstOrDefault();
+            var student = MvcApplication.studentList.Where(s => s.Id == id).FirstOrDefault();
 
             return View(student);
         }
@@ -26,38 +26,19 @@ namespace StudentsMVC.Controllers
         // GET: Student/Create
         public ActionResult Create()
         {
-            List<int> ListOfClassrooms = new List<int>();
-            foreach (var item in MvcApplication.classroomList)
-            {
-                ListOfClassrooms.Add(item.Id);
-            }
-            ViewBag.ListOfClassrooms = ListOfClassrooms;
-
-            List<int> ListOfAddresses = new List<int>();
-            foreach (var item in MvcApplication.addressList)
-            {
-                ListOfAddresses.Add(item.Id);
-            }
-            ViewBag.ListOfAddresses = ListOfAddresses;
             return View();
         }
         
 
         // POST: Student/Create
         [HttpPost]
-        public ActionResult Create(Classroom classroom, Student student)
+        public ActionResult Create(Student student)
         {
             try
             {
                 // TODO: Add insert logic here
 
                 student.Id = ++MvcApplication.studentsIdCount;
-
-                var cs = MvcApplication.classroomList.Where(s => s.Id == classroom.Id).FirstOrDefault();
-
-                student.StudentClassroom.Id = cs.Id;
-                student.StudentClassroom.Name = cs.Name;
-                student.StudentClassroom.Number = cs.Number;
 
                 MvcApplication.studentList.Add(student);
 

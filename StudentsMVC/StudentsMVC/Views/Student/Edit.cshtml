@@ -3,6 +3,28 @@
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<SelectListItem> ListOfClassrooms = new List<SelectListItem>();
+    foreach (var classroom in MvcApplication.classroomList)
+    {
+        ListOfClassrooms.Add(new SelectListItem
+        {
+            Text = classroom.Name + " - " + classroom.Number,
+            Value = classroom.Name + " - " + classroom.Number
+
+        });
+    }
+
+    List<SelectListItem> ListOfAddresses = new List<SelectListItem>();
+    foreach (var address in MvcApplication.addressList)
+    {
+        ListOfAddresses.Add(new SelectListItem
+        {
+            Text = address.Street + " - " + address.City + " - " + address.PostalCode,
+            Value = address.Street + " - " + address.City + " - " + address.PostalCode
+
+        });
+    }
 }
 
 <h2>Edit</h2>
@@ -36,7 +58,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.StudentClassroom, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.StudentClassroom, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.DropDownListFor(model => model.StudentClassroom, ListOfClassrooms, "-- Select Status --", new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.StudentClassroom, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -44,7 +66,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.StudentAddress, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.StudentAddress, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.DropDownListFor(model => model.StudentAddress, ListOfAddresses, "-- Select Status --", new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.StudentAddress, "", new { @class = "text-danger" })
         </div>
     </div>
