@@ -28,19 +28,44 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.StudentClassroom)
+            @Html.DisplayNameFor(model => model.StudentClassroom.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.StudentClassroom)
+            @Html.DisplayFor(model => model.StudentClassroom.Name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.StudentAddress)
+            @Html.DisplayNameFor(model => model.StudentClassroom.Number)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.StudentAddress)
+            @Html.DisplayFor(model => model.StudentClassroom.Number)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StudentAddress.Street)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StudentAddress.Street)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StudentAddress.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StudentAddress.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StudentAddress.PostalCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StudentAddress.PostalCode)
         </dd>
 
     </dl>

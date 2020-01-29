@@ -4,24 +4,57 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    List<SelectListItem> ListOfClassrooms = new List<SelectListItem>();
+    List<SelectListItem> ListOfClassroomsName = new List<SelectListItem>();
     foreach (var classroom in MvcApplication.classroomList)
     {
-        ListOfClassrooms.Add(new SelectListItem
+        ListOfClassroomsName.Add(new SelectListItem
         {
-            Text = classroom.ToString(),
-            Value = classroom.ToString()
+            Text = classroom.Name,
+            Value = classroom.Name
 
         });
     }
 
-    List<SelectListItem> ListOfAddresses = new List<SelectListItem>();
+    List<SelectListItem> ListOfClassroomsNumber = new List<SelectListItem>();
+    foreach (var classroom in MvcApplication.classroomList)
+    {
+        ListOfClassroomsNumber.Add(new SelectListItem
+        {
+            Text = classroom.Number,
+            Value = classroom.Number
+
+        });
+    }
+
+    List<SelectListItem> ListOfAddressesStreet = new List<SelectListItem>();
     foreach (var address in MvcApplication.addressList)
     {
-        ListOfAddresses.Add(new SelectListItem
+        ListOfAddressesStreet.Add(new SelectListItem
         {
-            Text = address.ToString(),
-            Value = address.ToString()
+            Text = address.Street,
+            Value = address.Street
+
+        });
+    }
+
+    List<SelectListItem> ListOfAddressesCity = new List<SelectListItem>();
+    foreach (var address in MvcApplication.addressList)
+    {
+        ListOfAddressesCity.Add(new SelectListItem
+        {
+            Text = address.City,
+            Value = address.City
+
+        });
+    }
+
+    List<SelectListItem> ListOfAddressesPostalCode = new List<SelectListItem>();
+    foreach (var address in MvcApplication.addressList)
+    {
+        ListOfAddressesPostalCode.Add(new SelectListItem
+        {
+            Text = address.PostalCode,
+            Value = address.PostalCode
 
         });
     }
@@ -55,18 +88,39 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.StudentClassroom, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.StudentClassroom.Name, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.StudentClassroom, ListOfClassrooms, "-- Select Status --", new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.StudentClassroom, "", new { @class = "text-danger" })
+            @Html.DropDownListFor(model => model.StudentClassroom.Name, ListOfClassroomsName, "-- Select Status --", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.StudentClassroom.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.StudentClassroom.Number, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.StudentClassroom.Number, ListOfClassroomsNumber, "-- Select Status --", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.StudentClassroom.Number, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.StudentAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.StudentAddress.Street, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.StudentAddress, ListOfAddresses, "-- Select Status --", new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.StudentAddress, "", new { @class = "text-danger" })
+            @Html.DropDownListFor(model => model.StudentAddress.Street, ListOfAddressesStreet, "-- Select Status --", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.StudentAddress.Street, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.StudentAddress.City, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.StudentAddress.City, ListOfAddressesCity, "-- Select Status --", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.StudentAddress.City, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.StudentAddress.PostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.StudentAddress.PostalCode, ListOfAddressesPostalCode, "-- Select Status --", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.StudentAddress.PostalCode, "", new { @class = "text-danger" })
         </div>
     </div>
 
