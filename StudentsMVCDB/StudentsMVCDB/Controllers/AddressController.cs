@@ -1,26 +1,24 @@
-﻿using StudentsMVC.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using StudentsMVCDB.Models;
 
-namespace StudentsMVC.Controllers
+namespace StudentsMVCDB.Controllers
 {
     public class AddressController : Controller
     {
         // GET: Address
         public ActionResult Index()
         {
-            return View(MvcApplication.addressList);
+            return View(DBUtility.SelectAllAddressesAsList(DBUtility.SelectAllAddresses()));
         }
 
         // GET: Address/Details/5
         public ActionResult Details(int id)
         {
-            var address = MvcApplication.addressList.Where(s => s.Id == id).FirstOrDefault();
-
-            return View(address);
+            return View(DBUtility.SelectAddressById(id));
         }
 
         // GET: Address/Create
@@ -36,8 +34,10 @@ namespace StudentsMVC.Controllers
             try
             {
                 // TODO: Add insert logic here
-                address.Id = ++MvcApplication.addressesIdCount;
-                MvcApplication.addressList.Add(address);
+                if(DBUtility.InsertAddress(address) != 1)
+                {
+                    return View();
+                }
 
                 return RedirectToAction("Index");
             }
@@ -50,22 +50,21 @@ namespace StudentsMVC.Controllers
         // GET: Address/Edit/5
         public ActionResult Edit(int id)
         {
-            var address = MvcApplication.addressList.Where(s => s.Id == id).FirstOrDefault();
-
-            return View(address);
+            return View(DBUtility.SelectAddressById(id));
         }
 
         // POST: Address/Edit/5
         [HttpPost]
-        public ActionResult Edit(Address address)
+        public ActionResult Edit(int id, Address address)
         {
             try
             {
                 // TODO: Add update logic here
-               var ad = MvcApplication.addressList.Where(s => s.Id == address.Id).FirstOrDefault();
-                ad.Street = address.Street;
-                ad.City = address.City;
-                ad.PostalCode = address.PostalCode;
+
+                if(DBUtility.UpdateAddress(address) != 1)
+                {
+                    return View();
+                }
 
                 return RedirectToAction("Index");
             }
@@ -78,9 +77,7 @@ namespace StudentsMVC.Controllers
         // GET: Address/Delete/5
         public ActionResult Delete(int id)
         {
-            var address = MvcApplication.addressList.Where(s => s.Id == id).FirstOrDefault();
-
-            return View(address);
+            return View();
         }
 
         // POST: Address/Delete/5
@@ -90,9 +87,6 @@ namespace StudentsMVC.Controllers
             try
             {
                 // TODO: Add delete logic here
-
-                var address = MvcApplication.addressList.Where(s => s.Id == id).FirstOrDefault();
-                MvcApplication.addressList.Remove(address);
 
                 return RedirectToAction("Index");
             }
