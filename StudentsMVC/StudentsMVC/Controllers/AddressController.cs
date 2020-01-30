@@ -18,9 +18,9 @@ namespace StudentsMVC.Controllers
         // GET: Address/Details/5
         public ActionResult Details(int id)
         {
-            var classroom = MvcApplication.addressList.Where(s => s.Id == id).FirstOrDefault();
+            var address = MvcApplication.addressList.Where(s => s.Id == id).FirstOrDefault();
 
-            return View(classroom);
+            return View(address);
         }
 
         // GET: Address/Create

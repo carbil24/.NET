@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using StudentsMVCDB.Models;
 
 namespace StudentsMVCDB.Controllers
 {
@@ -11,13 +12,13 @@ namespace StudentsMVCDB.Controllers
         // GET: Address
         public ActionResult Index()
         {
-            return View();
+            return View(DBUtility.SelectAllAddressesAsList(DBUtility.SelectAllAddresses()));
         }
 
         // GET: Address/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(DBUtility.SelectAddressById(id));
         }
 
         // GET: Address/Create
@@ -28,11 +29,15 @@ namespace StudentsMVCDB.Controllers
 
         // POST: Address/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(Address address)
         {
             try
             {
                 // TODO: Add insert logic here
+                if(DBUtility.InsertAddress(address) != 1)
+                {
+                    return View();
+                }
 
                 return RedirectToAction("Index");
             }
@@ -45,16 +50,21 @@ namespace StudentsMVCDB.Controllers
         // GET: Address/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(DBUtility.SelectAddressById(id));
         }
 
         // POST: Address/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, Address address)
         {
             try
             {
                 // TODO: Add update logic here
+
+                if(DBUtility.UpdateAddress(address) != 1)
+                {
+                    return View();
+                }
 
                 return RedirectToAction("Index");
             }
