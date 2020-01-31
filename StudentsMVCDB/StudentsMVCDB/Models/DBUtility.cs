@@ -340,5 +340,36 @@ namespace StudentsMVCDB.Models
 
         #endregion
 
+        #region Delete Address
+
+        public static int DeleteAddress(int id)
+        {
+            SqlConnection conn;
+            SqlCommand cmd;
+
+            using (conn = new SqlConnection(GetConnectionString()))
+            {
+                try
+                {
+                    string sql = $"delete from [Address] where Id = {id}";
+
+                    conn.Open();
+
+                    using (cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.CommandType = System.Data.CommandType.Text;
+
+                        return cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    return ex.ErrorCode;
+                }
+            }
+        }
+
+        #endregion
+
     }
 }

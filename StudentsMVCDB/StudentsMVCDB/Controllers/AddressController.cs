@@ -77,7 +77,7 @@ namespace StudentsMVCDB.Controllers
         // GET: Address/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(DBUtility.SelectAddressById(id));
         }
 
         // POST: Address/Delete/5
@@ -87,6 +87,8 @@ namespace StudentsMVCDB.Controllers
             try
             {
                 // TODO: Add delete logic here
+                if (DBUtility.DeleteAddress(id) != 1)
+                    return View();
 
                 return RedirectToAction("Index");
             }
